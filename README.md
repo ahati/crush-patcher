@@ -40,6 +40,12 @@ This patch adds the following features:
   - Removed redundant event files
   - Simplified event structure
 
+- **Privacy**: Removed all device identification and tracking
+  - Removed Posthog analytics dependency
+  - Removed machine ID tracking
+  - Removed `x-crush-id` header from API requests
+  - All event tracking functions are now no-ops
+
 ## Fetching Base Version
 
 Before applying the patch, you need to fetch the base commit:

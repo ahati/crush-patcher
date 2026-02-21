@@ -1,8 +1,57 @@
+diff --git a/README.md b/README.md
+index 49563822..366acab6 100644
+--- a/README.md
++++ b/README.md
+@@ -723,36 +723,6 @@ crush update-providers embedded
+ crush update-providers --help
+ ```
+ 
+-## Metrics
+-
+-Crush records pseudonymous usage metrics (tied to a device-specific hash),
+-which maintainers rely on to inform development and support priorities. The
+-metrics include solely usage metadata; prompts and responses are NEVER
+-collected.
+-
+-Details on exactly what’s collected are in the source code ([here](https://github.com/charmbracelet/crush/tree/main/internal/event)
+-and [here](https://github.com/charmbracelet/crush/blob/main/internal/llm/agent/event.go)).
+-
+-You can opt out of metrics collection at any time by setting the environment
+-variable by setting the following in your environment:
+-
+-```bash
+-export CRUSH_DISABLE_METRICS=1
+-```
+-
+-Or by setting the following in your config:
+-
+-```json
+-{
+-  "options": {
+-    "disable_metrics": true
+-  }
+-}
+-```
+-
+-Crush also respects the `DO_NOT_TRACK` convention which can be enabled via
+-`export DO_NOT_TRACK=1`.
+-
+ ## Contributing
+ 
+ See the [contributing guide](https://github.com/charmbracelet/crush?tab=contributing-ov-file#contributing).
 diff --git a/go.mod b/go.mod
-index 52ba1061..844bc52a 100644
+index 52ba1061..0e753703 100644
 --- a/go.mod
 +++ b/go.mod
-@@ -50,7 +50,6 @@ require (
+@@ -35,7 +35,6 @@ require (
+ 	github.com/charmbracelet/x/term v0.2.2
+ 	github.com/clipperhouse/displaywidth v0.10.0
+ 	github.com/clipperhouse/uax29/v2 v2.7.0
+-	github.com/denisbrodbeck/machineid v1.0.1
+ 	github.com/disintegration/imaging v1.6.2
+ 	github.com/dustin/go-humanize v1.0.1
+ 	github.com/go-git/go-git/v5 v5.16.5
+@@ -50,7 +49,6 @@ require (
  	github.com/nxadm/tail v1.4.11
  	github.com/openai/openai-go/v2 v2.7.1
  	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c
@@ -10,7 +59,7 @@ index 52ba1061..844bc52a 100644
  	github.com/pressly/goose/v3 v3.26.0
  	github.com/qjebbs/go-jsons v1.0.0-alpha.4
  	github.com/rivo/uniseg v0.4.7
-@@ -115,7 +114,6 @@ require (
+@@ -115,7 +113,6 @@ require (
  	github.com/go-logr/logr v1.4.3 // indirect
  	github.com/go-logr/stdr v1.2.2 // indirect
  	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
@@ -18,7 +67,7 @@ index 52ba1061..844bc52a 100644
  	github.com/goccy/go-yaml v1.19.2 // indirect
  	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
  	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-@@ -126,7 +124,6 @@ require (
+@@ -126,7 +123,6 @@ require (
  	github.com/googleapis/gax-go/v2 v2.17.0 // indirect
  	github.com/gorilla/css v1.0.1 // indirect
  	github.com/gorilla/websocket v1.5.3 // indirect
@@ -26,6 +75,37 @@ index 52ba1061..844bc52a 100644
  	github.com/inconshreveable/mousetrap v1.1.0 // indirect
  	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
  	github.com/kaptinlin/go-i18n v0.2.9 // indirect
+diff --git a/go.sum b/go.sum
+index 76611757..67c5db18 100644
+--- a/go.sum
++++ b/go.sum
+@@ -141,8 +141,6 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
+ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
+ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+-github.com/denisbrodbeck/machineid v1.0.1 h1:geKr9qtkB876mXguW2X6TU4ZynleN6ezuMSRhl4D7AQ=
+-github.com/denisbrodbeck/machineid v1.0.1/go.mod h1:dJUwb7PTidGDeYyUBmXZ2GphQBbjJCrnectwCyxcUSI=
+ github.com/disintegration/imaging v1.6.2 h1:w1LecBlG2Lnp8B3jk5zSuNqd7b4DXhcjwek1ei82L+c=
+ github.com/disintegration/imaging v1.6.2/go.mod h1:44/5580QXChDfwIclfc/PCwrr44amcmDAg8hxG0Ewe4=
+ github.com/dlclark/regexp2 v1.11.5 h1:Q/sSnsKerHeCkc/jSTNq1oCm7KiVgUMZRDUoRu0JQZQ=
+@@ -180,8 +178,6 @@ github.com/go-quicktest/qt v1.101.0 h1:O1K29Txy5P2OK0dGo59b7b0LR6wKfIhttaAhHUyn7
+ github.com/go-quicktest/qt v1.101.0/go.mod h1:14Bz/f7NwaXPtdYEgzsx46kqSxVwTbzVZsDC26tQJow=
+ github.com/go-viper/mapstructure/v2 v2.5.0 h1:vM5IJoUAy3d7zRSVtIwQgBj7BiWtMPfmPEgAXnvj1Ro=
+ github.com/go-viper/mapstructure/v2 v2.5.0/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
+-github.com/goccy/go-json v0.10.5 h1:Fq85nIqj+gXn/S5ahsiTlK3TmC85qgirsdTP/+DeaC4=
+-github.com/goccy/go-json v0.10.5/go.mod h1:oq7eo15ShAhp70Anwd5lgX2pLfOS3QCiwU/PULtXL6M=
+ github.com/goccy/go-yaml v1.19.2 h1:PmFC1S6h8ljIz6gMRBopkjP1TVT7xuwrButHID66PoM=
+ github.com/goccy/go-yaml v1.19.2/go.mod h1:XBurs7gK8ATbW4ZPGKgcbrY1Br56PdM69F7LkFRi1kA=
+ github.com/golang-jwt/jwt/v5 v5.3.0 h1:pv4AsKCKKZuqlgs5sUmn4x8UlGa0kEVt/puTpKx9vvo=
+@@ -298,8 +294,6 @@ github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10/go.mod h1
+ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+ github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
+ github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+-github.com/posthog/posthog-go v1.10.0 h1:wfoy7Jfb4LigCoHYyMZoiJmmEoCLOkSaYfDxM/NtCqY=
+-github.com/posthog/posthog-go v1.10.0/go.mod h1:wB3/9Q7d9gGb1P/yf/Wri9VBlbP8oA8z++prRzL5OcY=
+ github.com/pressly/goose/v3 v3.26.0 h1:KJakav68jdH0WDvoAcj8+n61WqOIaPGgH0bJWS6jpmM=
+ github.com/pressly/goose/v3 v3.26.0/go.mod h1:4hC1KrritdCxtuFsqgs1R4AU5bWtTAf+cnWvfhf2DNY=
+ github.com/qjebbs/go-jsons v1.0.0-alpha.4 h1:Qsb4ohRUHQODIUAsJKdKJ/SIDbsO7oGOzsfy+h1yQZs=
 diff --git a/internal/agent/coordinator.go b/internal/agent/coordinator.go
 index 16ceb21a..9c1cdfa5 100644
 --- a/internal/agent/coordinator.go
@@ -80,6 +160,371 @@ index 3f6c640f..247e9e01 100644
  }
  
  func (a *sessionAgent) eventCommon(sessionID string, model Model) []any {
+diff --git a/internal/agent/hyper/provider.go b/internal/agent/hyper/provider.go
+index e4c1cd85..d81e0073 100644
+--- a/internal/agent/hyper/provider.go
++++ b/internal/agent/hyper/provider.go
+@@ -24,7 +24,6 @@ import (
+ 	"charm.land/catwalk/pkg/catwalk"
+ 	"charm.land/fantasy"
+ 	"charm.land/fantasy/object"
+-	"github.com/charmbracelet/crush/internal/event"
+ )
+ 
+ //go:generate wget -O provider.json https://hyper.charm.land/api/v1/provider
+@@ -87,10 +86,12 @@ func New(opts ...Option) (fantasy.Provider, error) {
+ 	o := options{
+ 		baseURL: BaseURL() + "/api/v1/fantasy",
+ 		name:    Name,
+-		headers: map[string]string{
+-			"x-crush-id": event.GetID(),
++		headers: map[string]string{},
++		client: &http.Client{
++			Transport: &http.Transport{
++				ResponseHeaderTimeout: 30 * time.Second,
++			},
+ 		},
+-		client: &http.Client{Timeout: 0}, // stream-safe
+ 	}
+ 	for _, opt := range opts {
+ 		opt(&o)
+@@ -172,104 +173,135 @@ func (m *languageModel) Generate(ctx context.Context, call fantasy.Call) (*fanta
+ 
+ // Stream implements fantasy.LanguageModel using SSE from the proxy.
+ func (m *languageModel) Stream(ctx context.Context, call fantasy.Call) (fantasy.StreamResponse, error) {
+-	// Prefer explicit /stream endpoint
+-	resp, err := m.doRequest(ctx, true, call)
+-	if err != nil {
+-		return nil, err
+-	}
+-	switch resp.StatusCode {
+-	case http.StatusTooManyRequests:
+-		_ = resp.Body.Close()
+-		return nil, toProviderError(resp, retryAfter(resp))
+-	case http.StatusUnauthorized:
+-		_ = resp.Body.Close()
+-		return nil, toProviderError(resp, "")
+-	case http.StatusPaymentRequired:
+-		_ = resp.Body.Close()
+-		return nil, ErrNoCredits
+-	}
++	const maxRetries = 10
++	const retryDelay = 500 * time.Millisecond
++
++	var lastErr error
++	var lastEventID string
++	for attempt := 0; attempt <= maxRetries; attempt++ {
++		if attempt > 0 {
++			slog.Debug("Retrying stream request", "attempt", attempt, "error", lastErr, "last_event_id", lastEventID)
++			select {
++			case <-ctx.Done():
++				return nil, ctx.Err()
++			case <-time.After(retryDelay):
++			}
++		}
+ 
+-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+-		defer func() { _ = resp.Body.Close() }()
+-		b, _ := ioReadAllLimit(resp.Body, 64*1024)
+-		return nil, &fantasy.ProviderError{
+-			Title:      "Stream Error",
+-			Message:    strings.TrimSpace(string(b)),
+-			StatusCode: resp.StatusCode,
++		resp, err := m.doStreamRequest(ctx, call, lastEventID)
++		if err != nil {
++			lastErr = err
++			if !isRetryableError(err) {
++				return nil, err
++			}
++			continue
++		}
++
++		switch resp.StatusCode {
++		case http.StatusTooManyRequests:
++			_ = resp.Body.Close()
++			return nil, toProviderError(resp, retryAfter(resp))
++		case http.StatusUnauthorized:
++			_ = resp.Body.Close()
++			return nil, toProviderError(resp, "")
++		case http.StatusPaymentRequired:
++			_ = resp.Body.Close()
++			return nil, ErrNoCredits
+ 		}
+-	}
+ 
+-	return func(yield func(fantasy.StreamPart) bool) {
+-		defer func() { _ = resp.Body.Close() }()
+-		scanner := bufio.NewScanner(resp.Body)
+-		buf := make([]byte, 0, 64*1024)
+-		scanner.Buffer(buf, 4*1024*1024)
++		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
++			defer func() { _ = resp.Body.Close() }()
++			b, _ := ioReadAllLimit(resp.Body, 64*1024)
++			return nil, &fantasy.ProviderError{
++				Title:      "Stream Error",
++				Message:    strings.TrimSpace(string(b)),
++				StatusCode: resp.StatusCode,
++			}
++		}
+ 
+-		var (
+-			event     string
+-			dataBuf   bytes.Buffer
+-			sawFinish bool
+-			dispatch  = func() bool {
+-				if dataBuf.Len() == 0 || event == "" {
++		return func(yield func(fantasy.StreamPart) bool) {
++			defer func() { _ = resp.Body.Close() }()
++			scanner := bufio.NewScanner(resp.Body)
++			buf := make([]byte, 0, 64*1024)
++			scanner.Buffer(buf, 4*1024*1024)
++
++			var (
++				eventID   string
++				event     string
++				dataBuf   bytes.Buffer
++				sawFinish bool
++				dispatch  = func() bool {
++					if dataBuf.Len() == 0 || event == "" {
++						dataBuf.Reset()
++						event = ""
++						return true
++					}
++					var part fantasy.StreamPart
++					if err := json.Unmarshal(dataBuf.Bytes(), &part); err != nil {
++						return yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeError, Error: err})
++					}
++					if part.Type == fantasy.StreamPartTypeFinish {
++						sawFinish = true
++					}
++					ok := yield(part)
++					// Track last event ID for potential resume
++					if eventID != "" {
++						lastEventID = eventID
++					}
+ 					dataBuf.Reset()
+ 					event = ""
+-					return true
++					return ok
+ 				}
+-				var part fantasy.StreamPart
+-				if err := json.Unmarshal(dataBuf.Bytes(), &part); err != nil {
+-					return yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeError, Error: err})
++			)
++
++			for scanner.Scan() {
++				line := scanner.Text()
++				if line == "" { // event boundary
++					if !dispatch() {
++						return
++					}
++					continue
+ 				}
+-				if part.Type == fantasy.StreamPartTypeFinish {
+-					sawFinish = true
++				if strings.HasPrefix(line, ":") { // comment / ping
++					continue
+ 				}
+-				ok := yield(part)
+-				dataBuf.Reset()
+-				event = ""
+-				return ok
+-			}
+-		)
+-
+-		for scanner.Scan() {
+-			line := scanner.Text()
+-			if line == "" { // event boundary
+-				if !dispatch() {
+-					return
++				if strings.HasPrefix(line, "id: ") {
++					eventID = strings.TrimSpace(line[len("id: "):])
++					continue
++				}
++				if strings.HasPrefix(line, "event: ") {
++					event = strings.TrimSpace(line[len("event: "):])
++					continue
++				}
++				if strings.HasPrefix(line, "data: ") {
++					if dataBuf.Len() > 0 {
++						dataBuf.WriteByte('\n')
++					}
++					dataBuf.WriteString(line[len("data: "):])
++					continue
+ 				}
+-				continue
+-			}
+-			if strings.HasPrefix(line, ":") { // comment / ping
+-				continue
+-			}
+-			if strings.HasPrefix(line, "event: ") {
+-				event = strings.TrimSpace(line[len("event: "):])
+-				continue
+ 			}
+-			if strings.HasPrefix(line, "data: ") {
+-				if dataBuf.Len() > 0 {
+-					dataBuf.WriteByte('\n')
++			if err := scanner.Err(); err != nil {
++				if sawFinish && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded)) {
++					// If we already saw an explicit finish event, treat cancellation as a no-op.
++				} else {
++					_ = yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeError, Error: err})
++					return
+ 				}
+-				dataBuf.WriteString(line[len("data: "):])
+-				continue
+ 			}
+-		}
+-		if err := scanner.Err(); err != nil {
+-			if sawFinish && (errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded)) {
+-				// If we already saw an explicit finish event, treat cancellation as a no-op.
+-			} else {
++			if err := ctx.Err(); err != nil && !sawFinish {
+ 				_ = yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeError, Error: err})
+ 				return
+ 			}
+-		}
+-		if err := ctx.Err(); err != nil && !sawFinish {
+-			_ = yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeError, Error: err})
+-			return
+-		}
+-		// flush any pending data
+-		_ = dispatch()
+-		if !sawFinish {
+-			_ = yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeFinish})
+-		}
+-	}, nil
++			// flush any pending data
++			_ = dispatch()
++			if !sawFinish {
++				_ = yield(fantasy.StreamPart{Type: fantasy.StreamPartTypeFinish})
++			}
++		}, nil
++	}
++
++	return nil, lastErr
+ }
+ 
+ func (m *languageModel) doRequest(ctx context.Context, stream bool, call fantasy.Call) (*http.Response, error) {
+@@ -306,7 +338,83 @@ func (m *languageModel) doRequest(ctx context.Context, stream bool, call fantasy
+ 	if m.opts.apiKey != "" {
+ 		req.Header.Set("Authorization", m.opts.apiKey)
+ 	}
+-	return m.opts.client.Do(req)
++
++	resp, err := m.opts.client.Do(req)
++	if err != nil {
++		var timeoutDuration time.Duration
++		if tr, ok := m.opts.client.Transport.(*http.Transport); ok {
++			timeoutDuration = tr.ResponseHeaderTimeout
++		}
++		if errors.Is(err, context.DeadlineExceeded) {
++			slog.Error("AI API request timed out",
++				"model", m.modelID,
++				"url", addr.String(),
++				"timeout", timeoutDuration,
++				"error", err)
++		} else if urlErr, ok := err.(*url.Error); ok && urlErr.Timeout() {
++			slog.Error("AI API request URL timeout",
++				"model", m.modelID,
++				"url", addr.String(),
++				"error", err)
++		}
++	}
++	return resp, err
++}
++
++// doStreamRequest makes a streaming request with optional Last-Event-ID for resume support.
++func (m *languageModel) doStreamRequest(ctx context.Context, call fantasy.Call, lastEventID string) (*http.Response, error) {
++	addr, err := url.Parse(m.opts.baseURL)
++	if err != nil {
++		return nil, err
++	}
++	addr = addr.JoinPath(m.modelID, "stream")
++
++	body, err := json.Marshal(call)
++	if err != nil {
++		return nil, err
++	}
++
++	req, err := http.NewRequestWithContext(ctx, http.MethodPost, addr.String(), bytes.NewReader(body))
++	if err != nil {
++		return nil, err
++	}
++	req.Header.Set("Content-Type", "application/json")
++	req.Header.Set("Accept", "text/event-stream")
++	for k, v := range m.opts.headers {
++		req.Header.Set(k, v)
++	}
++
++	// Add Last-Event-ID header for resume support (SSE standard)
++	if lastEventID != "" {
++		req.Header.Set("Last-Event-ID", lastEventID)
++	}
++
++	if m.opts.apiKey != "" {
++		req.Header.Set("Authorization", m.opts.apiKey)
++	}
++
++	resp, err := m.opts.client.Do(req)
++	if err != nil {
++		var timeoutDuration time.Duration
++		if tr, ok := m.opts.client.Transport.(*http.Transport); ok {
++			timeoutDuration = tr.ResponseHeaderTimeout
++		}
++		if errors.Is(err, context.DeadlineExceeded) {
++			slog.Error("AI API stream request timed out",
++				"model", m.modelID,
++				"url", addr.String(),
++				"timeout", timeoutDuration,
++				"last_event_id", lastEventID,
++				"error", err)
++		} else if urlErr, ok := err.(*url.Error); ok && urlErr.Timeout() {
++			slog.Error("AI API stream request URL timeout",
++				"model", m.modelID,
++				"url", addr.String(),
++				"last_event_id", lastEventID,
++				"error", err)
++		}
++	}
++	return resp, err
+ }
+ 
+ // ioReadAllLimit reads up to n bytes.
+@@ -336,3 +444,33 @@ func retryAfter(resp *http.Response) string {
+ 	}
+ 	return "Try again later"
+ }
++
++func isRetryableError(err error) bool {
++	if err == nil {
++		return false
++	}
++	// Retry on timeout errors.
++	if errors.Is(err, context.DeadlineExceeded) {
++		slog.Warn("Request timed out - will retry", "error", err)
++		return true
++	}
++	// Retry on network timeout errors.
++	var netErr interface{ Timeout() bool }
++	if errors.As(err, &netErr) && netErr.Timeout() {
++		slog.Warn("Network timeout error - will retry", "error", err)
++		return true
++	}
++	// Retry on connection errors.
++	var urlErr *url.Error
++	if errors.As(err, &urlErr) {
++		if urlErr.Timeout() {
++			slog.Warn("URL timeout error - will retry", "error", err)
++		} else {
++			slog.Warn("Connection error - will retry", "error", err)
++		}
++		return true
++	}
++	// Log and retry on other network errors (DNS failures, connection refused, etc.)
++	slog.Warn("Network error - will retry", "error", err)
++	return true
++}
 diff --git a/internal/agent/templates/agentic_fetch_prompt.md.tpl b/internal/agent/templates/agentic_fetch_prompt.md.tpl
 index e1c3e520..4265584e 100644
 --- a/internal/agent/templates/agentic_fetch_prompt.md.tpl
@@ -1491,37 +1936,36 @@ index 8caf98e6..00000000
 -	)
 -}
 diff --git a/internal/event/event.go b/internal/event/event.go
-index 389b6549..3e73fec3 100644
+index 389b6549..fd566819 100644
 --- a/internal/event/event.go
 +++ b/internal/event/event.go
-@@ -1,129 +1,107 @@
+@@ -1,129 +1,61 @@
  package event
  
  import (
-+	"crypto/hmac"
-+	"crypto/sha256"
-+	"encoding/hex"
- 	"fmt"
+-	"fmt"
 -	"log/slog"
 -	"os"
 -	"path/filepath"
 -	"reflect"
 -	"runtime"
-+	"net"
  	"time"
- 
+-
 -	"github.com/charmbracelet/crush/internal/version"
 -	"github.com/posthog/posthog-go"
-+	"github.com/denisbrodbeck/machineid"
  )
  
 -const (
 -	endpoint = "https://data.charm.land"
 -	key      = "phc_4zt4VgDWLqbYnJYEwLRxFoaTL2noNrQij0C6E8k3I0V"
--
++func Init() {
++}
+ 
 -	nonInteractiveEventName = "NonInteractive"
 -)
-+var distinctId string
++func GetID() string {
++	return ""
++}
  
 -var (
 -	client posthog.Client
@@ -1534,21 +1978,13 @@ index 389b6549..3e73fec3 100644
 -			Set("Version", version.Version).
 -			Set("GoVersion", runtime.Version()).
 -			Set(nonInteractiveEventName, false)
-+const (
-+	hashKey    = "charm"
-+	fallbackId = "unknown"
- )
+-)
++func SetNonInteractive(_ bool) {
++}
  
 -func SetNonInteractive(nonInteractive bool) {
 -	baseProps = baseProps.Set(nonInteractiveEventName, nonInteractive)
-+func getDistinctId() string {
-+	if id, err := machineid.ProtectedID(hashKey); err == nil {
-+		return id
-+	}
-+	if macAddr, err := getMacAddr(); err == nil {
-+		return hashString(macAddr)
-+	}
-+	return fallbackId
++func Alias(_ string) {
  }
  
 -func Init() {
@@ -1557,38 +1993,15 @@ index 389b6549..3e73fec3 100644
 -		Logger:          logger{},
 -		ShutdownTimeout: 500 * time.Millisecond,
 -	})
-+func getMacAddr() (string, error) {
-+	interfaces, err := net.Interfaces()
- 	if err != nil {
+-	if err != nil {
 -		slog.Error("Failed to initialize PostHog client", "error", err)
-+		return "", err
-+	}
-+	for _, iface := range interfaces {
-+		if iface.Flags&net.FlagUp != 0 && iface.Flags&net.FlagLoopback == 0 && len(iface.HardwareAddr) > 0 {
-+			if addrs, err := iface.Addrs(); err == nil && len(addrs) > 0 {
-+				return iface.HardwareAddr.String(), nil
-+			}
-+		}
- 	}
+-	}
 -	client = c
-+	return "", fmt.Errorf("no active interface with mac address found")
-+}
-+
-+func hashString(str string) string {
-+	hash := hmac.New(sha256.New, []byte(str))
-+	hash.Write([]byte(hashKey))
-+	return hex.EncodeToString(hash.Sum(nil))
-+}
-+
-+func Init() {
- 	distinctId = getDistinctId()
- }
- 
+-	distinctId = getDistinctId()
+-}
+-
 -func GetID() string { return distinctId }
-+func GetID() string {
-+	return distinctId
-+}
- 
+-
 -func Alias(userID string) {
 -	if client == nil || distinctId == fallbackId || distinctId == "" || userID == "" {
 -		return
@@ -1601,9 +2014,8 @@ index 389b6549..3e73fec3 100644
 -		return
 -	}
 -	slog.Info("Aliased in PostHog", "machine_id", distinctId, "user_id", userID)
-+func SetNonInteractive(_ bool) {
- }
- 
+-}
+-
 -// send logs an event to PostHog with the given event name and properties.
 -func send(event string, props ...any) {
 -	if client == nil {
@@ -1618,9 +2030,8 @@ index 389b6549..3e73fec3 100644
 -		slog.Error("Failed to enqueue PostHog event", "event", event, "props", props, "error", err)
 -		return
 -	}
-+func Alias(_ string) {
- }
- 
+-}
+-
 -// Error logs an error event to PostHog with the error type and message.
 -func Error(errToLog any, props ...any) {
 -	if client == nil {
@@ -1652,23 +2063,17 @@ index 389b6549..3e73fec3 100644
 -	p := posthog.NewProperties()
 +func send(_ string, _ ...any) {
 +}
++
++func pairsToProps(_ ...any) map[string]any {
++	return make(map[string]any)
++}
++
++var appStartTime time.Time
  
 -	if !isEven(len(props)) {
 -		slog.Error("Event properties must be provided as key-value pairs", "props", props)
 -		return p
 -	}
-+func pairsToProps(_ ...any) map[string]any {
-+	return make(map[string]any)
-+}
- 
--	for i := 0; i < len(props); i += 2 {
--		key := props[i].(string)
--		value := props[i+1]
--		p = p.Set(key, value)
--	}
--	return p
-+var appStartTime time.Time
-+
 +func AppInitialized() {
 +	appStartTime = time.Now()
 +}
@@ -1690,7 +2095,13 @@ index 389b6549..3e73fec3 100644
 +
 +func PromptSent(_ ...any) {
 +}
-+
+ 
+-	for i := 0; i < len(props); i += 2 {
+-		key := props[i].(string)
+-		value := props[i+1]
+-		p = p.Set(key, value)
+-	}
+-	return p
 +func PromptResponded(_ ...any) {
  }
  
@@ -1929,6 +2340,22 @@ index f9279f9f..20073353 100644
  	return nil
  }
  
+diff --git a/schema.json b/schema.json
+index 298d8fe8..692a6e16 100644
+--- a/schema.json
++++ b/schema.json
+@@ -426,11 +426,6 @@
+           "$ref": "#/$defs/Attribution",
+           "description": "Attribution settings for generated content"
+         },
+-        "disable_metrics": {
+-          "type": "boolean",
+-          "description": "Disable sending metrics",
+-          "default": false
+-        },
+         "initialize_as": {
+           "type": "string",
+           "description": "Name of the context file to create/update during project initialization",
 diff --git a/scripts/install-lsp.sh b/scripts/install-lsp.sh
 new file mode 100755
 index 00000000..32e8c408

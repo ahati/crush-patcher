@@ -7,7 +7,7 @@ This repository contains a patch file for applying upstream changes from the mai
 ## Patch Details
 
 - **Base commit**: `3f07c90efe618e4889d09d8e2effe4d75867c4ce` (chore(legal): @erikstmartin has signed the CLA)
-- **To commit**: `c1d294d161dbee0d1bd5061c3270050c980b8d98` (feat(ui): indicate when skills are loaded)
+- **To commit**: `5489d0a268f3bb6a16d1bf5128abbb39cacd3353` (Merge remote-tracking branch 'origin/main' into opencode-features)
 
 This patch only includes ahati's changes, not upstream changes.
 
@@ -97,7 +97,7 @@ git fetch upstream
 git merge upstream/main
 
 # 3. Generate patch (adjust commit ranges as needed)
-git diff 3f07c90e..c1d294d1 > /path/to/crush-patcher/crush-main-patch.diff
+git diff 3f07c90e..5489d0a2 > /path/to/crush-patcher/crush-main-patch.diff
 
 # 4. Commit the new patch in this repo
 cd /path/to/crush-patcher

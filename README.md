@@ -9,42 +9,23 @@ This repository contains a patch file with changes from the base commit `3f07c90
 The patch file `crush-main-patch.diff` contains changes from base commit:
 - `3f07c90efe618e4889d09d8e2effe4d75867c4ce` (chore(legal): @erikstmartin has signed the CLA)
 
+To commit:
+- `c1d294d161dbee0d1bd5061c3270050c980b8d98` (feat(ui): indicate when skills are loaded)
+
 ## Features
 
 This patch adds the following features:
 
-- **Exa Search Tool**: New tool for web searching using Exa AI API
-  - `internal/agent/tools/exa_search.go` - Exa search implementation
-  - `internal/agent/tools/exa_search.md` - Tool specification
+- **Skill Loading Indicators**: UI now shows when skills are loaded
+  - `internal/agent/tools/view.go` - Added resource type, name, and description to view response metadata
+  - `internal/ui/chat/tools.go` - New skill content rendering function
+  - `internal/ui/styles/styles.go` - New styles for resource loading indicators
 
-- **OpenCode Branding**: Application renamed from Crush to OpenCode
-
-- **Reduced System Prompt Tokens**: Significantly shortened agent templates
-  - Simplified critical rules (from 13 to 8 rules)
-  - Removed verbose communication style guidelines
-  - Streamlined workflow instructions
-  - Reduced token usage for cost efficiency
-
-- **OpenCode Zen Free Model Decision**: Intelligent model selection
-  - Automatic free model selection when paid API keys unavailable
-  - Falls back to free providers seamlessly
-  - Configurable provider priority
-
-- **LSP Support**: New LSP installation script
-  - `scripts/install-lsp.sh` - Installs and configures language servers
-
-- **Config Improvements**: Enhanced configuration loading
-  - `internal/config/load.go` - New config loading logic
-
-- **Event System Refactoring**: Improved event handling
-  - Removed redundant event files
-  - Simplified event structure
-
-- **Privacy**: Removed all device identification and tracking
-  - Removed Posthog analytics dependency
-  - Removed machine ID tracking
-  - Removed `x-crush-id` header from API requests
-  - All event tracking functions are now no-ops
+- **UI Improvements**: Various UI rendering fixes
+  - Message rendering now applies style prefix to each line
+  - Header details spacing fixes
+  - Status bar width calculations corrected
+  - Compact header/footer rendering fixes
 
 ## Fetching Base Version
 
